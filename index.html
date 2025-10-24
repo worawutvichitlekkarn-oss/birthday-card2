@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>การ์ดวันเกิด — แพนด้า & อโวคาโด้</title>
+<style>
+:root{--bg:#d0f0c0;--accent:#ff6b9a;--accent2:#ffb3c6;--card:#ffffff;--text:#362c2f}
+html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: linear-gradient(180deg,var(--bg), #fff);color:var(--text)}
+.wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px}
+.card{width:100%;max-width:720px;background:var(--card);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.08);padding:28px;position:relative;overflow:hidden}
+header{display:flex;gap:14px;align-items:center}
+.avatar{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center; font-weight:700;color:white;font-size:28px}
+h1{margin:0;font-size:20px}
+p.lead{margin:6px 0 18px;color:#5b4a50}
+.stage{display:grid;grid-template-columns:1fr 220px;gap:18px;align-items:center}
+.left{min-height:240px;display:flex;align-items:center;justify-content:center;position:relative}
+.present{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.big-heart{font-size:54px;margin-bottom:8px;filter:drop-shadow(0 6px 18px rgba(255,107,154,0.22))}
+.btn{background:linear-gradient(90deg,var(--accent),#ff8aa8);border:none;padding:12px 18px;border-radius:12px;color:white;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(255,107,154,0.18);transition:transform .14s}
+.btn:active{transform:translateY(2px) scale(.995)}
+.right{display:flex;flex-direction:column;gap:12px}
+.card-inside{background:linear-gradient(180deg,#fff,#fff7fb);padding:14px;border-radius:12px;border:1px dashed rgba(255,107,154,0.18);min-height:140px;display:flex;align-items:center;justify-content:center}
+.message{font-size:18px;text-align:center;line-height:1.45}
+.hearts{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:hidden}
+.heart{position:absolute;font-size:20px;opacity:.9;animation:floatUp 6s linear infinite}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(.8);opacity:0}10%{opacity:1}100%{transform:translateY(-20vh) scale(1.1);opacity:0}}
+#confetti{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.typing{border-right:2px solid rgba(0,0,0,0.12);padding-right:6px}
+@media (max-width:720px){
+  .stage{grid-template-columns:1fr; padding:10px;}
+  .left{order:1; padding:10px;}
+  .right{order:2; padding:10px;}
+  iframe{height:200px !important;} 
+  .message{font-size:16px;}
+  .btn{padding:10px 14px;font-size:16px;}
+}
+footer{margin-top:16px;color:#6b5b60;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.tiny{font-size:12px;color:#9a8388}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="main">
+    <canvas id="confetti"></canvas>
+    <div class="hearts" id="hearts"></div>
+    <header>
+      <div class="avatar">🐼🥑</div>
+      <div>
+        <h1>สุขสันต์วันเกิด! 🎉</h1>
+        <p class="lead">การ์ดขี้เล่นจากคนที่อยากให้เธอยิ้ม — (กดปุ่มข้างล่างเลย)</p>
+      </div>
+    </header>
+
+    <div class="stage" style="margin-top:10px">
+      <div class="left">
+        <div class="present">
+          <div class="big-heart">❤️</div>
+          <button class="btn" id="reveal">กดเลย — ลุ้นข้อความ!</button>
+          <div style="margin:12px 0; text-align:center;">
+            <iframe data-testid="embed-iframe" style="border-radius:12px"
+                    src="https://open.spotify.com/embed/track/7crpPxW7A7lqsDujBCt6Qq?utm_source=generator&theme=0"
+                    width="100%" height="352" frameborder="0" allowfullscreen
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"></iframe>
+          </div>
+          <div style="height:8px"></div>
+          <div class="tiny">แพนด้า & อโวคาโด้ ขี้เล่นสุด ๆ 🐼🥑</div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="card-inside" id="cardInside">
+          <div class="message" id="message">(ยังไม่เปิด...)</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="tiny">ส่งไฟล์ HTML นี้ทาง LINE/Messenger</div>
+      <div class="tiny">กด 6 ครั้งเพื่ออ่านทั้งหมด 😂💚</div>
+    </footer>
+  </div>
+</div>
+
+<script>
+const heartsEl = document.getElementById('hearts');
+function spawnHeart(){ 
+  const h = document.createElement('div'); 
+  h.className='heart'; 
+  h.style.left=(Math.random()*100)+'%'; 
+  h.style.fontSize=(14+Math.random()*28)+'px'; 
+  h.style.opacity=(0.6+Math.random()*0.4); 
+  h.style.transform=`translateY(0) rotate(${Math.random()*60-30}deg)`; 
+  h.textContent=['💖','💕','💘','💝'][Math.floor(Math.random()*4)]; 
+  h.style.animationDuration=(4+Math.random()*5)+'s'; 
+  heartsEl.appendChild(h); 
+  setTimeout(()=>h.remove(),9500); 
+}
+for(let i=0;i<8;i++) setTimeout(spawnHeart,i*400);
+setInterval(spawnHeart,1400);
+
+const canvas = document.getElementById('confetti');
+const ctx = canvas.getContext('2d');
+let W,H;
+function resize(){ W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight; }
+window.addEventListener('resize',resize); resize();
+
+function ConfettiPiece(){ 
+  this.x=Math.random()*W; 
+  this.y=-10-Math.random()*H; 
+  this.r=(4+Math.random()*8)|0; 
+  this.d=Math.random()*50; 
+  this.tilt=Math.random()*10-10; 
+  this.color=['#a8e6cf','#dcedc1','#ffd3b6','#ffaaa5'][Math.floor(Math.random()*4)]; 
+  this.tiltAngleIncremental=(Math.random()*0.07)+.05; 
+  this.tiltAngle=0; 
+}
+ConfettiPiece.prototype.draw=function(){
+  ctx.beginPath();
+  ctx.lineWidth=this.r;
+  ctx.strokeStyle=this.color;
+  ctx.moveTo(this.x+this.tilt+this.r/2,this.y);
+  ctx.lineTo(this.x+this.tilt,this.y+this.r*1.5);
+  ctx.stroke();
+}
+let confetti=[];
+function launchConfetti(num=80){ 
+  confetti=[]; 
+  for(let i=0;i<num;i++) confetti.push(new ConfettiPiece()); 
+  animateConfetti(); 
+}
+let confettiAnim;
+function animateConfetti(){ 
+  cancelAnimationFrame(confettiAnim); 
+  function run(){ 
+    ctx.clearRect(0,0,W,H); 
+    for(let i=0;i<confetti.length;i++){ 
+      const p=confetti[i]; 
+      p.tiltAngle+=p.tiltAngleIncremental; 
+      p.y+=(Math.cos(p.d)+3+p.r/2); 
+      p.x+=Math.sin(0.01*p.d); 
+      p.tilt=Math.sin(p.tiltAngle)*15; 
+      p.draw(); 
+      if(p.y>H+20){ confetti.splice(i,1); i--; } 
+    } 
+    confettiAnim=requestAnimationFrame(run); 
+  } 
+  run(); 
+  setTimeout(()=>{ cancelAnimationFrame(confettiAnim); ctx.clearRect(0,0,W,H); },6000); 
+}
+
+const messageEl=document.getElementById('message');
+const revealBtn=document.getElementById('reveal');
+const messages=[
+  '1️⃣ แหน่ะ กดทำไม? สนใจเราหรอ? 😏',
+  '2️⃣ ถ้ากดอีกครั้ง ต้องมาขอเราเป็นแฟนแล้วนะ ไม่งั้นห้ามกด! 🐼💚',
+  '3️⃣ ครบ 22 ปีแบบเป็นทางการแล้วสินะ… โตขึ้นอีกปีแล้ว ไม่ว่าจะผ่านไปกี่ปีก็ขอให้เลิฟเจอแต่เรื่องดีๆนะ 🎂',
+  '4️⃣ ขอบคุณที่เจอกันนะ... ถ้าไม่มีเลิฟ ชีวิตแพนด้าของชั้นคงจืดมาก ขอบคุณที่ผ่านเข้ามาในช่วงชีวิตที่ชั้นจริงจังที่สุดแต่เธอกลับยังไม่บ้าตายไปก่อน มีเธออยู่ข้างๆชั้นสบายใจขึ้นเยอะเลย 💖',
+  '5️⃣ ถ้าสนใจชั้นจริงๆก็แสดงออกมากกว่านี้หน่อยนะ 🥑🐼',
+  '6️⃣ Happy Birthday! Turn 22 officially! 🎉🎂🐼🥑'
+];
+let clickIndex=0;
+
+function typeText(text){
+  messageEl.textContent='';
+  messageEl.classList.add('typing');
+  let i=0;
+  function typing(){
+    if(i<text.length){ messageEl.textContent+=text.charAt(i); i++; setTimeout(typing,40+Math.random()*20); }
+    else { messageEl.classList.remove('typing'); }
+  }
+  typing();
+}
+
+revealBtn.addEventListener('click',()=>{
+  if(clickIndex<messages.length){
+    typeText(messages[clickIndex]);
+    if(clickIndex===messages.length-1){
+      launchConfetti(150); 
+      for(let i=0;i<8;i++) setTimeout(spawnHeart,i*200);
+    }
+    clickIndex++;
+  } else { messageEl.textContent='อ่านครบแล้ว! 😊'; }
+});
+</script>
+</body>
+</html>
